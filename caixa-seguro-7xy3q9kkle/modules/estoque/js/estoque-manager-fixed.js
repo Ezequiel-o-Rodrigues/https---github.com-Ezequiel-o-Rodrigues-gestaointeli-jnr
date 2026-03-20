@@ -44,6 +44,11 @@ class EstoqueManager {
                 this.saveProduct();
             }
         });
+
+        const imageInput = document.getElementById('productImage');
+        if (imageInput) {
+            imageInput.addEventListener('change', (e) => this.previewImage(e));
+        }
     }
 
     loadInitialData() {
@@ -143,6 +148,13 @@ class EstoqueManager {
             this.setFormValue('productMinStock', product.estoque_minimo);
             this.setFormValue('productInitialStock', product.estoque_atual || 0);
 
+            // Carregar preview se houver imagem
+            if (product.imagem) {
+                this.showImagePreview(product.imagem);
+            } else {
+                this.hideImagePreview();
+            }
+
         } catch (error) {
             this.error('Erro ao carregar produto', error);
             this.showAlert('Erro ao carregar dados do produto', 'error');
@@ -209,18 +221,24 @@ class EstoqueManager {
         this.log('Salvando produto...');
         
         try {
-            const formData = {
-                id: document.getElementById('productId')?.value || null,
-                nome: document.getElementById('productName')?.value,
-                categoria_id: document.getElementById('productCategory')?.value,
-                preco: document.getElementById('productPrice')?.value,
-                estoque_minimo: document.getElementById('productMinStock')?.value,
-                estoque_inicial: document.getElementById('productInitialStock')?.value || 0
-            };
+            const form = document.getElementById('productForm');
+            const formData = new FormData();
+            
+            formData.append('id', document.getElementById('productId')?.value || '');
+            formData.append('nome', document.getElementById('productName')?.value || '');
+            formData.append('categoria_id', document.getElementById('productCategory')?.value || '');
+            formData.append('preco', document.getElementById('productPrice')?.value || '');
+            formData.append('estoque_minimo', document.getElementById('productMinStock')?.value || '');
+            formData.append('estoque_inicial', document.getElementById('productInitialStock')?.value || '0');
+            
+            const imageInput = document.getElementById('productImage');
+            if (imageInput && imageInput.files[0]) {
+                formData.append('imagem', imageInput.files[0]);
+            }
 
-            this.log('Dados do formulário', formData);
+            this.log('Enviando FormData...');
 
-            if (!formData.nome || !formData.categoria_id) {
+            if (!document.getElementById('productName')?.value || !document.getElementById('productCategory')?.value) {
                 throw new Error('Preencha todos os campos obrigatórios');
             }
 
@@ -238,10 +256,7 @@ class EstoqueManager {
 
             const response = await fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
+                body: formData
             });
 
             this.log('Resposta da API', { status: response.status, url: response.url });
@@ -456,6 +471,47 @@ class EstoqueManager {
     triggerEvent(element, eventName) {
         const event = new Event(eventName, { bubbles: true });
         element.dispatchEvent(event);
+    }
+
+    previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('imagePreview');
+        const img = preview.querySelector('img');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            this.hideImagePreview();
+        }
+    }
+
+    showImagePreview(filename) {
+        const preview = document.getElementById('imagePreview');
+        if (preview) {
+            const img = preview.querySelector('img');
+            // Supõe que as imagens estão em /public/images/products/ no sistema do cardapio
+            // Mas para o estoque, precisamos do caminho correto do servidor
+            // O cardapio usa public/images/menu/ ou algo assim. 
+            // Vamos usar o BASE_URL para resolver isso.
+            const basePath = window.appConfig ? window.appConfig.basePath : '/';
+            // Caminho configurado no Render e Hostinger: public_html/public/images/
+            img.src = `../../public/images/products/${filename}`;
+            preview.style.display = 'block';
+        }
+    }
+
+    hideImagePreview() {
+        const preview = document.getElementById('imagePreview');
+        if (preview) {
+            preview.style.display = 'none';
+            const img = preview.querySelector('img');
+            img.src = '';
+        }
     }
 }
 

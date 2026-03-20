@@ -888,6 +888,9 @@ try {
         }
     </script>
 
+    <!-- Configuração de Caminhos -->
+    <script src="<?php echo $base_path; ?>js/path-config.js"></script>
+    
     <!-- Script de impressão -->
 <script src="<?php echo $base_path; ?>modules/caixa/impressao-service.js"></script>
 

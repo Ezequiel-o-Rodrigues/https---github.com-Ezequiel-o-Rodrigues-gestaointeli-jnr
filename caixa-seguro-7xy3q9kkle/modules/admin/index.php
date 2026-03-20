@@ -260,6 +260,66 @@ require_once '../../includes/header.php';
         </div>
     </div>
 
+    <!-- Card: Gerenciar Categorias -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0">🏷️ Gerenciar Categorias</h5>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#categoriaModal" onclick="novaCategoria()">Nova Categoria</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-categorias">
+                        <?php 
+                        $stmt = $db->prepare('SELECT id, nome FROM categorias ORDER BY nome');
+                        $stmt->execute();
+                        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        foreach($categorias as $cat): 
+                        ?>
+                        <tr>
+                            <td><?= htmlspecialchars($cat['nome']) ?></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#categoriaModal" onclick="editarCategoria(<?= $cat['id'] ?>, '<?= htmlspecialchars($cat['nome']) ?>')">Editar</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deletarCategoria(<?= $cat['id'] ?>)">Remover</button>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Categoria -->
+<div class="modal fade" id="categoriaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoriaModalTitle">Nova Categoria</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="cat_nome" class="form-label">Nome *</label>
+                    <input type="text" class="form-control" id="cat_nome" required>
+                    <input type="hidden" id="cat_id">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarCategoria()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Garçom -->
 <div class="modal fade" id="garcomModal" tabindex="-1">
     <div class="modal-dialog">

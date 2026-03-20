@@ -380,6 +380,13 @@ foreach ($produtos as $produto) {
                         <label for="productInitialStock" class="form-label">Estoque Inicial</label>
                         <input type="number" id="productInitialStock" class="form-control" min="0" value="0">
                     </div>
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Imagem do Produto (Opcional)</label>
+                        <input type="file" id="productImage" class="form-control" accept="image/*">
+                        <div id="imagePreview" class="mt-2 text-center" style="display: none;">
+                            <img src="" alt="Preview" style="max-width: 100%; max-height: 150px; border-radius: 8px;">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
