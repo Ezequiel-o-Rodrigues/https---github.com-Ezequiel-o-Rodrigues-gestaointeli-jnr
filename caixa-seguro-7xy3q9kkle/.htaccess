@@ -1,8 +1,8 @@
 RewriteEngine On
 
-# Redirecionar para HTTPS (se disponível)
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Redirecionamento HTTPS comentado pois o Render forca SSL na borda
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Configurações de segurança
 <Files "*.sql">
