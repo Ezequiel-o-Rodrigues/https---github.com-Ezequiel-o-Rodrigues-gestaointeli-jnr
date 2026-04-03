@@ -56,6 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php'); exit;
         }
 
+        if ($action === 'toggle_garcons_module') {
+            $atual = getConfig('garcons_ativo', '1');
+            $novo = $atual === '1' ? '0' : '1';
+            $stmt = $db->prepare("INSERT INTO configuracoes_sistema (chave, valor, descricao) VALUES ('garcons_ativo', ?, 'Modulo de garcons ativo') ON CONFLICT (chave) DO UPDATE SET valor = EXCLUDED.valor, updated_at = NOW()");
+            $stmt->execute([$novo]);
+            $_SESSION['sucesso'] = $novo === '1' ? 'Modulo de garcons ativado.' : 'Modulo de garcons desativado. Comandas serao atribuidas ao caixa.';
+            header('Location: index.php'); exit;
+        }
+
         if ($action === 'save_estabelecimento') {
             $campos = ['nome_estabelecimento', 'nome_sistema', 'telefone', 'email_contato', 'endereco', 'link_ifood', 'link_whatsapp', 'horario_delivery', 'instagram', 'facebook'];
             foreach ($campos as $campo) {
@@ -261,6 +270,7 @@ require_once '../../includes/header.php';
     </div>
 
     <!-- Card: Desempenho dos Garçons -->
+    <?php if ($garcons_ativo): ?>
     <div class="card mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -281,14 +291,31 @@ require_once '../../includes/header.php';
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Card: Gerenciar Garçons -->
+    <?php $garcons_ativo = getConfig('garcons_ativo', '1') === '1'; ?>
     <div class="card mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="card-title mb-0">👨‍🍳 Gerenciar Garçons</h5>
-                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#garcomModal" onclick="novoGarcom()">Novo Garçom</button>
+                <div class="d-flex align-items-center gap-3">
+                    <h5 class="card-title mb-0"><i class="bi bi-person-badge"></i> Garcons</h5>
+                    <form method="POST" class="d-inline">
+                        <input type="hidden" name="action" value="toggle_garcons_module">
+                        <button type="submit" class="btn btn-sm <?= $garcons_ativo ? 'btn-success' : 'btn-outline-secondary' ?>">
+                            <?= $garcons_ativo ? 'Ativo' : 'Desativado' ?>
+                        </button>
+                    </form>
+                </div>
+                <?php if ($garcons_ativo): ?>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#garcomModal" onclick="novoGarcom()">Novo Garcom</button>
+                <?php endif; ?>
             </div>
+            <?php if (!$garcons_ativo): ?>
+            <div class="alert alert-info mb-0">
+                <i class="bi bi-info-circle"></i> Modulo desativado. Todas as comandas serao atribuidas ao operador do caixa.
+            </div>
+            <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-sm">
                     <thead>
@@ -329,6 +356,7 @@ require_once '../../includes/header.php';
                     </tbody>
                 </table>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 

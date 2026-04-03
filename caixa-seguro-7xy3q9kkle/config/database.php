@@ -30,7 +30,7 @@ class Database {
 
         } catch(PDOException $exception) {
             error_log("Erro de conexão: " . $exception->getMessage());
-            echo "Erro de conexão: " . $exception->getMessage();
+            throw $exception;
         }
 
         return $this->conn;

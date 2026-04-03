@@ -99,6 +99,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caixa - <?php echo getNomeSistema(); ?></title>
     <link rel="stylesheet" href="<?php echo $base_path; ?>css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         * {
             margin: 0;
@@ -378,7 +379,7 @@ try {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 90px;
+    min-height: 140px;
     position: relative;
     overflow: hidden;
 }
@@ -400,6 +401,25 @@ try {
     height: 3px;
     background: currentColor;
     opacity: 0.7;
+}
+
+.produto-img {
+    width: 100%;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.produto-img-placeholder {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    background: rgba(0,0,0,0.03);
 }
 
 .produto-nome {
@@ -624,6 +644,11 @@ try {
                      data-produto-estoque="<?= $produto['estoque_atual'] ?>"
                      onclick="adicionarProduto(<?= $produto['id'] ?>, '<?= htmlspecialchars(addslashes($produto['nome'])) ?>', <?= $produto['preco'] ?>)">
                     
+                    <?php if (!empty($produto['imagem'])): ?>
+                    <img class="produto-img" src="<?= $base_path ?>public/images/products/<?= htmlspecialchars($produto['imagem']) ?>" alt="">
+                    <?php else: ?>
+                    <div class="produto-img-placeholder"><i class="bi bi-image" style="font-size:1.2rem;opacity:0.3;"></i></div>
+                    <?php endif; ?>
                     <div class="produto-nome"><?= htmlspecialchars($produto['nome']) ?></div>
                     <div class="produto-preco">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></div>
                     <div class="produto-estoque <?= $produto['estoque_atual'] <= $produto['estoque_minimo'] ? 'estoque-baixo' : '' ?>">
@@ -717,11 +742,19 @@ try {
 
     <!-- JavaScript do Modal -->
     <script>
+        // Config: modulo garcons ativo/inativo
+        const GARCONS_ATIVO = <?= getConfig('garcons_ativo', '1') === '1' ? 'true' : 'false' ?>;
+
         // Variável global para armazenar o garçom selecionado
         let garcomSelecionado = null;
         let garcomNomeSelecionado = null;
 
         function abrirModalGarcom() {
+            // Se garcons desativado, ir direto para criar comanda do caixa
+            if (!GARCONS_ATIVO) {
+                criarComandaCaixa();
+                return;
+            }
             document.getElementById('modalGarcom').style.display = 'flex';
             garcomSelecionado = null;
             garcomNomeSelecionado = null;

@@ -1,5 +1,5 @@
-   <?php
-   // ✅ CORRIGIDO
+<?php
+ini_set('display_errors', 0);
 require_once __DIR__ . '/../config/paths.php';
 require_once PathConfig::config('database.php');
 header('Content-Type: application/json; charset=utf-8');

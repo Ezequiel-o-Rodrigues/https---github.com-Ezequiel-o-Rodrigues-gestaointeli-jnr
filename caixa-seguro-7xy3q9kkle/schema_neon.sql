@@ -162,6 +162,7 @@ ON CONFLICT (chave) DO NOTHING;
 -- Configuracoes white-label (defaults)
 INSERT INTO configuracoes_sistema (chave, valor, descricao) VALUES ('nome_estabelecimento', 'Meu Estabelecimento', 'Nome exibido no cardapio e comprovantes') ON CONFLICT (chave) DO NOTHING;
 INSERT INTO configuracoes_sistema (chave, valor, descricao) VALUES ('nome_sistema', 'GestaoInteli', 'Nome do sistema exibido no header e login') ON CONFLICT (chave) DO NOTHING;
+INSERT INTO configuracoes_sistema (chave, valor, descricao) VALUES ('garcons_ativo', '1', 'Modulo de garcons ativo (1) ou desativado (0)') ON CONFLICT (chave) DO NOTHING;
 
 -- Constraints de seguranca para perdas
 ALTER TABLE perdas_estoque ADD CONSTRAINT chk_perdas_positivas CHECK (quantidade_perdida >= 0 AND valor_perda >= 0);

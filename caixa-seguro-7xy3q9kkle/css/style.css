@@ -1,26 +1,40 @@
 /* ============================================
-   GestaoInteli - Design System
-   Paleta: Indigo (#4f46e5) + Slate (#334155)
+   GestaoInteli - Design System v2
+   Paleta: Indigo/Violet (#4f46e5) + Slate (#334155)
+   Matching login gradient style
    ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
     --primary: #4f46e5;
     --primary-dark: #4338ca;
+    --primary-darker: #3730a3;
     --primary-light: #818cf8;
+    --primary-lighter: #c7d2fe;
     --secondary: #334155;
+    --secondary-dark: #1e293b;
     --secondary-light: #475569;
     --accent: #06b6d4;
-    --success: #16a34a;
+    --success: #10b981;
+    --success-dark: #059669;
     --warning: #f59e0b;
-    --danger: #dc2626;
-    --bg: #f1f5f9;
+    --danger: #ef4444;
+    --bg: #f8fafc;
     --bg-card: #ffffff;
-    --text: #1e293b;
-    --text-muted: #64748b;
+    --text: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
     --border: #e2e8f0;
-    --radius: 10px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    --border-light: #f1f5f9;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+    --gradient: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary) 100%);
+    --gradient-soft: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
 }
 
 * {
@@ -29,91 +43,333 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+}
+
 body {
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+main.container {
+    flex: 1;
 }
 
 .container {
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 /* ============================================
-   HEADER / NAV
+   HEADER / NAV — Gradient matching login
    ============================================ */
 .header {
-    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+    background: var(--gradient);
     color: white;
     padding: 0;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
 .header .container {
-    padding: 0.6rem 20px;
+    padding: 0.65rem 24px;
 }
 
 .header h1 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 0%, var(--primary-lighter) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .main-nav {
     display: flex;
-    gap: 0.25rem;
+    gap: 2px;
 }
 
 .main-nav a {
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.75);
     text-decoration: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    transition: all 0.2s;
-    font-size: 0.875rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    font-size: 0.82rem;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.main-nav a:hover {
+.main-nav a:hover,
+.main-nav a.active {
     background: rgba(255,255,255,0.15);
     color: white;
+    backdrop-filter: blur(4px);
+}
+
+.main-nav a i {
+    font-size: 1rem;
 }
 
 /* ============================================
-   FOOTER
+   FOOTER — Fixed to bottom, matching gradient
    ============================================ */
 .footer {
-    background: var(--secondary);
-    color: rgba(255,255,255,0.7);
+    background: var(--gradient);
+    color: rgba(255,255,255,0.6);
     text-align: center;
-    padding: 1rem 0;
-    margin-top: 2rem;
-    font-size: 0.85rem;
+    padding: 1.25rem 0;
+    margin-top: auto;
+    font-size: 0.82rem;
+}
+
+.footer p {
+    margin: 0;
+}
+
+.footer small {
+    color: rgba(255,255,255,0.4);
 }
 
 /* ============================================
-   CARDS
+   CARDS — Clean with subtle depth
    ============================================ */
 .card {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-body {
+    padding: 1.5rem;
 }
 
 .card-title {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-title i {
+    color: var(--primary);
 }
 
 /* ============================================
-   GRIDS
+   BUTTONS — Matching login gradient
+   ============================================ */
+.btn-primary {
+    background: var(--gradient-soft) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+.btn-success {
+    background: var(--success) !important;
+    border-color: var(--success) !important;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background: var(--success-dark) !important;
+}
+
+/* ============================================
+   TABLES — Refined
+   ============================================ */
+.table {
+    font-size: 0.875rem;
+}
+
+.table thead th {
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
+    padding: 0.6rem 0.75rem;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 0.55rem 0.75rem;
+    border-color: var(--border-light);
+    color: var(--text-secondary);
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* ============================================
+   BADGES — Modern pills
+   ============================================ */
+.badge {
+    font-weight: 600;
+    font-size: 0.7rem;
+    padding: 0.3em 0.7em;
+    border-radius: 50px;
+    letter-spacing: 0.02em;
+}
+
+.badge.bg-success { background: var(--success) !important; }
+.badge.bg-info { background: var(--primary-light) !important; color: white !important; }
+
+/* ============================================
+   ALERTS — Rounded, modern
+   ============================================ */
+.alert {
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-success { background: #ecfdf5; color: #065f46; }
+.alert-danger { background: #fef2f2; color: #991b1b; }
+.alert-info { background: #eef2ff; color: #3730a3; }
+.alert-warning { background: #fffbeb; color: #92400e; }
+
+/* ============================================
+   USER AVATAR — Gradient matching header
+   ============================================ */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gradient-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.25);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.user-avatar:hover {
+    transform: scale(1.08);
+    border-color: rgba(255,255,255,0.5);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+/* ============================================
+   DROPDOWN — Clean
+   ============================================ */
+.dropdown-menu {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    min-width: 260px;
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: var(--bg);
+}
+
+.dropdown-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.25rem;
+}
+
+/* ============================================
+   FORMS — Polished inputs
+   ============================================ */
+.form-control, .form-select {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s ease;
+    color: var(--text);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.form-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   MODALS — Clean
+   ============================================ */
+.modal-content {
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+}
+
+.modal-title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+}
+
+/* ============================================
+   GRIDS — Product cards
    ============================================ */
 .categorias-grid {
     display: grid;
@@ -128,8 +384,8 @@ body {
     border-radius: var(--radius);
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    border: 1.5px solid var(--border);
 }
 
 .categoria-card:hover {
@@ -148,17 +404,17 @@ body {
 .produto-card {
     background: var(--bg-card);
     padding: 0.9rem;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    border: 1.5px solid var(--border);
 }
 
 .produto-card:hover {
-    background: #f8fafc;
     border-color: var(--primary-light);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
 
 .produto-card .preco {
@@ -168,7 +424,7 @@ body {
 }
 
 /* ============================================
-   COMANDA
+   COMANDA — Section
    ============================================ */
 .comanda-section {
     background: var(--bg-card);
@@ -189,109 +445,59 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .total-section {
     background: var(--bg);
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     margin-top: 0.75rem;
 }
 
 /* ============================================
-   BUTTONS (custom, non-Bootstrap)
+   CUSTOM BUTTONS (non-Bootstrap)
    ============================================ */
 .btn {
-    padding: 0.6rem 1.25rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-}
-
-.btn-success {
-    background: var(--success);
-    color: white;
-}
-
-.btn-success:hover {
-    background: #15803d;
-}
-
-/* ============================================
-   TABLES
-   ============================================ */
-.table thead th {
     font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    border-bottom: 2px solid var(--border);
-}
-
-.table td {
-    vertical-align: middle;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
 }
 
 /* ============================================
-   ALERTS
+   SCROLLBAR — Subtle
    ============================================ */
-.alert {
-    border-radius: 8px;
-    font-size: 0.9rem;
+::-webkit-scrollbar {
+    width: 6px;
 }
 
-/* ============================================
-   USER AVATAR
-   ============================================ */
-.user-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-light), var(--primary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.3);
-    transition: all 0.2s;
+::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.user-avatar:hover {
-    transform: scale(1.05);
-    border-color: rgba(255,255,255,0.6);
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
 }
 
-/* ============================================
-   BADGES
-   ============================================ */
-.badge {
-    font-weight: 500;
-    font-size: 0.75rem;
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
-    .header h1 { font-size: 1rem; }
-    .main-nav { gap: 0.1rem; }
-    .main-nav a { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+    .header h1 { font-size: 0.95rem; }
+    .main-nav { gap: 0; }
+    .main-nav a { padding: 0.35rem 0.5rem; font-size: 0.75rem; }
+    .main-nav a span { display: none; }
+    .container { padding: 0 12px; }
+    .card-body { padding: 1rem; }
+}
+
+@media (max-width: 480px) {
+    .main-nav a { padding: 0.3rem 0.4rem; }
+    .main-nav a i { font-size: 1.1rem; }
 }
