@@ -9,12 +9,12 @@ try {
     $database = new Database();
     $db = $database->getConnection();
     
-    // Usar estrutura correta - data_venda será preenchida automaticamente
-    $query = "INSERT INTO comandas (status, valor_total, taxa_gorjeta) VALUES ('aberta', 0, 0)";
+    $query = "INSERT INTO comandas (status, valor_total, taxa_gorjeta) VALUES ('aberta', 0, 0) RETURNING id";
     $stmt = $db->prepare($query);
-    
+
     if ($stmt->execute()) {
-        $comanda_id = $db->lastInsertId();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $comanda_id = $row['id'];
         
         echo json_encode([
             'success' => true,

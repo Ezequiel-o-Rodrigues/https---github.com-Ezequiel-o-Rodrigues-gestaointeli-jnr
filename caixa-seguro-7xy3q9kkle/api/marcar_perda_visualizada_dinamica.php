@@ -71,17 +71,17 @@ try {
                 visualizada,
                 data_visualizacao,
                 motivo
-            ) VALUES (?, ?, ?, ?, 1, NOW(), 'Registrado do período')
+            ) VALUES (?, ?, ?, ?, 1, NOW(), 'Registrado do período') RETURNING id
         ");
-        
+
         $insert_stmt->execute([
             $produto_id,
             $quantidade_perdida,
             $valor_perda,
             $data_identificacao
         ]);
-        
-        $perda_id = $db->lastInsertId();
+        $row = $insert_stmt->fetch(PDO::FETCH_ASSOC);
+        $perda_id = $row['id'];
         
         echo json_encode([
             'success' => true,

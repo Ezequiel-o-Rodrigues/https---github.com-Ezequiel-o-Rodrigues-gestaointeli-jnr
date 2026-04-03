@@ -23,21 +23,38 @@ try {
     $database = new Database();
     $db = $database->getConnection();
 
-    // Rodar transação: calcular total, atualizar comanda, registrar movimentação e baixar estoque
+    // === PRE-TRANSACTION: verificar tabelas e configs ANTES de abrir transação ===
+    $has_itens_livres = false;
+    $check = $db->query("SELECT 1 FROM information_schema.tables WHERE table_name = 'itens_livres' AND table_schema = 'public'");
+    if ($check->fetch()) $has_itens_livres = true;
+
+    $taxa_config = 0;
+    $tipo_taxa = 'nenhuma';
+    try {
+        $stmt = $db->prepare("SELECT taxa_gorjeta, tipo_taxa FROM configuracoes ORDER BY id DESC LIMIT 1");
+        $stmt->execute();
+        $conf = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($conf) {
+            $taxa_config = floatval($conf['taxa_gorjeta'] ?? 0);
+            $tipo_taxa = $conf['tipo_taxa'] ?? 'nenhuma';
+        }
+    } catch (Exception $e) {
+        error_log("configuracoes table not found, using defaults");
+    }
+
+    // === TRANSACTION START ===
     $db->beginTransaction();
 
-    // Calcular total da comanda (itens_comanda + itens_livres)
-    $stmt = $db->prepare("SELECT COALESCE(SUM(subtotal),0) as total FROM (SELECT subtotal FROM itens_comanda WHERE comanda_id = ? UNION ALL SELECT subtotal FROM itens_livres WHERE comanda_id = ?) t");
-    $stmt->execute([$comanda_id, $comanda_id]);
+    // Calcular total da comanda
+    if ($has_itens_livres) {
+        $stmt = $db->prepare("SELECT COALESCE(SUM(subtotal),0) as total FROM (SELECT subtotal FROM itens_comanda WHERE comanda_id = ? UNION ALL SELECT subtotal FROM itens_livres WHERE comanda_id = ?) t");
+        $stmt->execute([$comanda_id, $comanda_id]);
+    } else {
+        $stmt = $db->prepare("SELECT COALESCE(SUM(subtotal),0) as total FROM itens_comanda WHERE comanda_id = ?");
+        $stmt->execute([$comanda_id]);
+    }
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $total_comanda = floatval($row['total'] ?? 0);
-
-    // Obter configuração de taxa
-    $stmt = $db->prepare("SELECT taxa_gorjeta, tipo_taxa FROM configuracoes ORDER BY id DESC LIMIT 1");
-    $stmt->execute();
-    $conf = $stmt->fetch(PDO::FETCH_ASSOC);
-    $taxa_config = floatval($conf['taxa_gorjeta'] ?? 0);
-    $tipo_taxa = $conf['tipo_taxa'] ?? 'nenhuma';
 
     if ($tipo_taxa === 'percentual' && $taxa_config > 0) {
         $taxa_gorjeta = ($total_comanda * $taxa_config) / 100;
@@ -96,10 +113,11 @@ try {
         $conteudo = gerarConteudoComprovante($comanda_data);
         
         // Salvar comprovante
-        $query_insert = "INSERT INTO comprovantes_venda (comanda_id, conteudo, tipo) VALUES (?, ?, 'cliente')";
+        $query_insert = "INSERT INTO comprovantes_venda (comanda_id, conteudo, tipo) VALUES (?, ?, 'cliente') RETURNING id";
         $stmt_insert = $db->prepare($query_insert);
         $stmt_insert->execute([$comanda_id, $conteudo]);
-        $comprovante_id = $db->lastInsertId();
+        $row_comp = $stmt_insert->fetch(PDO::FETCH_ASSOC);
+        $comprovante_id = $row_comp['id'] ?? null;
     }
 
     $db->commit();

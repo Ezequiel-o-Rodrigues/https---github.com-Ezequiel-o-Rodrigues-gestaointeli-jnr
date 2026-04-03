@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Criar nova comanda
-        $query = "INSERT INTO comandas (garcom_id, status, valor_total, created_at, updated_at) 
-                  VALUES (:garcom_id, 'aberta', 0.00, NOW(), NOW())";
+        $query = "INSERT INTO comandas (garcom_id, status, valor_total, created_at, updated_at)
+                  VALUES (:garcom_id, 'aberta', 0.00, NOW(), NOW()) RETURNING id";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':garcom_id', $garcom['id']);
         $stmt->execute();
-        
-        $comandaId = $db->lastInsertId();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $comandaId = $row['id'];
         
         echo json_encode([
             'success' => true, 

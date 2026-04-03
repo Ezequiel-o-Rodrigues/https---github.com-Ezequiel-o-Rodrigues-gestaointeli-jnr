@@ -21,12 +21,11 @@ $usuarioPerfil = $_SESSION['usuario_perfil'] ?? '';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
-    <!-- ✅ CSS personalizado - se existir na raiz -->
-    <?php if (file_exists(__DIR__ . '/../css/style.css')): ?>
-        <link rel="stylesheet" href="<?= PathConfig::url('css/style.css') ?>">
-    <?php elseif (file_exists(__DIR__ . '/../style.css')): ?>
-        <link rel="stylesheet" href="<?= PathConfig::url('style.css') ?>">
-    <?php endif; ?>
+    <?php
+    $css_file = __DIR__ . '/../css/style.css';
+    $css_version = file_exists($css_file) ? filemtime($css_file) : time();
+    ?>
+    <link rel="stylesheet" href="<?= PathConfig::url('css/style.css') ?>?v=<?= $css_version ?>">
     
     <script>
         const BASE_URL = '<?= PathConfig::url() ?>';
@@ -48,6 +47,7 @@ $usuarioPerfil = $_SESSION['usuario_perfil'] ?? '';
                         <a href="<?= PathConfig::url() ?>"><i class="bi bi-house-door"></i> Inicio</a>
                         <a href="<?= PathConfig::modules('caixa/') ?>"><i class="bi bi-cash-register"></i> Caixa</a>
                         <a href="<?= PathConfig::modules('estoque/') ?>"><i class="bi bi-box-seam"></i> Estoque</a>
+                        <a href="<?= PathConfig::modules('garcons/') ?>"><i class="bi bi-person-badge"></i> Garcons</a>
                         <a href="<?= PathConfig::modules('relatorios/') ?>"><i class="bi bi-graph-up"></i> Relatorios</a>
                         <?php if ($usuarioPerfil === 'admin'): ?>
                         <a href="<?= PathConfig::modules('admin/') ?>"><i class="bi bi-gear"></i> Admin</a>

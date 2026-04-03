@@ -109,10 +109,11 @@ try {
 
     } else {
         // NOVO produto
-        $query = "INSERT INTO produtos 
-                  (nome, categoria_id, preco, estoque_minimo, estoque_atual, imagem, ativo, created_at) 
-                  VALUES 
-                  (:nome, :categoria_id, :preco, :estoque_minimo, :estoque_atual, :imagem, true, NOW())";
+        $query = "INSERT INTO produtos
+                  (nome, categoria_id, preco, estoque_minimo, estoque_atual, imagem, ativo, created_at)
+                  VALUES
+                  (:nome, :categoria_id, :preco, :estoque_minimo, :estoque_atual, :imagem, true, NOW())
+                  RETURNING id";
 
         $stmt = $db->prepare($query);
         $stmt->bindParam(':nome', $input['nome']);
@@ -125,7 +126,8 @@ try {
         $success = $stmt->execute();
 
         if ($success) {
-            $produto_id = $db->lastInsertId();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $produto_id = $row['id'];
             
             // Se tem estoque inicial, registrar movimentação
             if ($estoque_inicial > 0) {

@@ -27,9 +27,10 @@ try {
         $stmt->execute([$nome, $id]);
         $message = 'Categoria atualizada com sucesso';
     } else {
-        $stmt = $db->prepare("INSERT INTO categorias (nome, created_at) VALUES (?, NOW())");
+        $stmt = $db->prepare("INSERT INTO categorias (nome, created_at) VALUES (?, NOW()) RETURNING id");
         $stmt->execute([$nome]);
-        $id = $db->lastInsertId();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $id = $row['id'];
         $message = 'Categoria criada com sucesso';
     }
 
