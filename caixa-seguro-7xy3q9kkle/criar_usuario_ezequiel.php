@@ -24,10 +24,10 @@ try {
     }
     
     // Criar usuário junior
-    $nome = 'Junior';
-    $usuario = 'junior';
-    $email = 'junior@sistema.com';
-    $senha = password_hash('101010', PASSWORD_DEFAULT);
+    $nome = 'ezequiel';
+    $usuario = 'ezequiel';
+    $email = 'ezequielrod2020@gmail.com';
+    $senha = password_hash('ezequiel2014', PASSWORD_DEFAULT);
     $perfil = 'admin';
     
     // Verificar se a tabela tem coluna 'usuario'
