@@ -39,7 +39,7 @@ try {
         echo "Coluna 'usuario' adicionada à tabela<br>";
     }
     
-    $query = "INSERT INTO usuarios (nome, usuario, email, senha, perfil, ativo) VALUES (?, ?, ?, ?, ?, 1)";
+    $query = "INSERT INTO usuarios (nome, usuario, email, senha, perfil, ativo) VALUES (?, ?, ?, ?, ?, true)";
     $stmt = $db->prepare($query);
     $stmt->execute([$nome, $usuario, $email, $senha, $perfil]);
     
